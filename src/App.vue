@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{toggled: is_toggled}">
     <div class="d-flex" id="wrapper">
       <!-- Sidebar-->
       <div class="border-end bg-dark" id="sidebar-wrapper">
@@ -18,7 +18,7 @@
           <!-- Top navigation-->
           <nav class="navbar navbar-expand-lg">
               <div class="container-fluid">
-                  <button class="btn btn-primary" id="sidebarToggle">收缩菜单</button>
+                  <button class="btn btn-primary" id="sidebarToggle" @click="toggleMenu()">{{buttonText()}}</button>
                   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
               </div>
           </nav>
@@ -32,34 +32,34 @@
 </template>
 
 <script>
-window.addEventListener('DOMContentLoaded', event => {
-  const sidebarToggle = document.body.querySelector('#sidebarToggle');
-  if (sidebarToggle) {
-    sidebarToggle.addEventListener('click', event => {
-      // event.preventDefault();
-      document.body.classList.toggle('sb-sidenav-toggled');
-      // localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
-      // 切换按钮文字
-      if(sidebarToggle.innerText == "收缩菜单"){
-        sidebarToggle.innerText = "展开菜单"
+export default {
+  data(){
+    return {
+      is_toggled: false
+    }
+  },
+  methods: {
+    // 收缩菜单
+    toggleMenu(){
+      this.is_toggled = !this.is_toggled;
+    },
+    // 菜单按钮文字
+    buttonText(){
+      if(this.is_toggled){
+        return "展开菜单";
       }else{
-        sidebarToggle.innerText = "收缩菜单"
+        return "收缩菜单";
       }
-    });
+    }
   }
-});
+}
 </script>
 
 <style>
 @import'~bootstrap/dist/css/bootstrap.css';
 
 body {
-  font-family: Inter, sans-serif;
   background-color: #19191d;
-  font-weight: 300;
-  font-size: 1rem;
-  line-height: 1.5;
-  text-align: left;
 }
 
 ul {
@@ -74,17 +74,47 @@ input, select, button {
   overflow-x: hidden;
 }
 
-.content {
-  padding-top: 3rem;
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  transition: margin 0.25s ease-out;
 }
 
-.container {
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 1140px;
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+.toggled #wrapper #sidebar-wrapper {
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .toggled #wrapper #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+}
+
+.content {
+  padding-top: 3rem;
 }
 
 .custom-table {
@@ -309,48 +339,5 @@ input, select, button {
 .buttons:hover {
     background-color: #1C3F99;
     border-color: #1C3F99;
-}
-
-#wrapper {
-  overflow-x: hidden;
-}
-
-#sidebar-wrapper {
-  min-height: 100vh;
-  margin-left: -15rem;
-  transition: margin 0.25s ease-out;
-}
-
-#sidebar-wrapper .sidebar-heading {
-  padding: 0.875rem 1.25rem;
-  font-size: 1.2rem;
-  color: #fff;
-}
-
-#sidebar-wrapper .list-group {
-  width: 15rem;
-}
-
-#page-content-wrapper {
-  min-width: 100vw;
-}
-
-body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
-  margin-left: 0;
-}
-
-@media (min-width: 768px) {
-  #sidebar-wrapper {
-    margin-left: 0;
-  }
-
-  #page-content-wrapper {
-    min-width: 0;
-    width: 100%;
-  }
-
-  body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
-    margin-left: -15rem;
-  }
 }
 </style>

@@ -58,7 +58,10 @@ export default {
         // 更新
         updateDepartment(){
             if(this.checkData()){
-                axios.get(new URL("departments?name=" + this.department.name, baseUrl)).then(res => {
+                // 创建 name 搜索 url
+                let nameUrl = new URL("departments", baseUrl)
+                nameUrl.searchParams.append('name', this.department.name);
+                axios.get(nameUrl.href).then(res => {
                     if(res.data.length == 0){ // 有同名部门
                         axios.put(new URL("departments/" + this.department.id, baseUrl), this.department).then(res => {
                             alert("修改成功");
@@ -75,7 +78,10 @@ export default {
         // 添加
         addDepartment(){
             if(this.checkData()){
-                axios.get(new URL("departments?name=" + this.department.name, baseUrl)).then(res => {
+                // 创建 name 搜索 url
+                let nameUrl = new URL("departments", baseUrl)
+                nameUrl.searchParams.append('name', this.department.name);
+                axios.get(nameUrl.href).then(res => {
                     if(res.data.length == 0){ // 有同名部门
                         axios.post(new URL("departments", baseUrl), this.department).then(res => {
                             alert("添加成功");

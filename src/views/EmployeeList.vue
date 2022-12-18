@@ -7,7 +7,7 @@
         部门:
         <select class="search-bar" v-model="departmentId">
           <option value="0">--</option>
-          <option v-for="(item, index) in departments" :key="index" :value="item.id">{{item.name}}</option>
+          <option v-for="(item, index) in departments" :key="index" :value="item[0]">{{item[1]}}</option>
         </select>
         <button class="buttons" @click="searchEmployee(employeeName, departmentId)">搜索</button>
       </div>
@@ -28,7 +28,7 @@
             <td>{{item.id}}</td>
             <td>{{item.name}}</td>
             <td>{{item.gender}}</td>
-            <td>{{departments[item.department_id - 1].name}}</td>
+            <td>{{departments.get(item.department_id)}}</td>
             <td>{{item.title}}</td>
             <td>{{item.hire_date}}</td>
             <td>
@@ -59,7 +59,7 @@ export default {
       employeeName: "",
       departmentId: 0,
       employees: [],
-      departments: []
+      departments: new Map()
     }
   },
   created(){
@@ -69,15 +69,20 @@ export default {
     // 获取列表
     getEmployeeList(){
       axios.get(new URL("departments", baseUrl)).then(res=>{
-        this.departments = res.data; // 获得部门信息
+        // 将部门数据导入到 Map
+        for(let i = 0; i < res.data.length; i++){
+          this.departments.set(res.data[i].id, res.data[i].name);
+        }
         return axios.get(new URL("employees", baseUrl));
       }).then(res=>{
         this.employees = res.data; // 获得员工信息
       });
+      
     },
     // 搜索
     searchEmployee(employeeName, departmentId){
       departmentId = parseInt(departmentId);
+      // 如果搜索条件存在
       if(employeeName || departmentId){
         let url = new URL("employees", baseUrl);
         if(employeeName){ // 姓名搜索

@@ -62,7 +62,7 @@ export default {
                 let nameUrl = new URL("departments", baseUrl)
                 nameUrl.searchParams.append('name', this.department.name);
                 axios.get(nameUrl.href).then(res => {
-                    if(res.data.length == 0){ // 有同名部门
+                    if(res.data.length == 0){ // 无同名部门
                         axios.put(new URL("departments/" + this.department.id, baseUrl), this.department).then(res => {
                             alert("修改成功");
                             router.push('DepartmentList');
@@ -82,7 +82,7 @@ export default {
                 let nameUrl = new URL("departments", baseUrl)
                 nameUrl.searchParams.append('name', this.department.name);
                 axios.get(nameUrl.href).then(res => {
-                    if(res.data.length == 0){ // 有同名部门
+                    if(res.data.length == 0){ // 无同名部门
                         axios.post(new URL("departments", baseUrl), this.department).then(res => {
                             alert("添加成功");
                             router.push('DepartmentList');
